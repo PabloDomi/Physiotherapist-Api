@@ -22,7 +22,7 @@ class Patient(db.Model):
     gender = db.Column(db.String(10), nullable=False)
 
     # Este sí se muestra
-    patient_routines = db.relationship('Routine', back_populates='patient')
+    patient_routines = db.relationship('Routines', back_populates='patient')
 
 
 class Routines(db.Model):
@@ -37,7 +37,7 @@ class Routines(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
 
     # Este sí se muestra
-    exercises = db.relationship('Exercise', back_populates='routine')
+    exercises = db.relationship('Exercises', back_populates='routine')
     # Este no se muestra
     patient = db.relationship('Patient', back_populates='patient_routines')
 
@@ -50,4 +50,16 @@ class Exercises(db.Model):
     description = db.Column(db.String(250), nullable=False)
 
     # Este no se muestra
-    routine = db.relationship('Course', back_populates='exercises')
+    routine = db.relationship('Routines', back_populates='exercises')
+
+
+class RoutineExercise(db.Model):
+    __tablename__ = 'routine_exercise'
+
+    id = db.Column(db.Integer, primary_key=True)
+    routine_id = db.Column(
+        db.Integer, db.ForeignKey('routines.id'), primary_key=True
+    )
+    exercise_id = db.Column(
+        db.Integer, db.ForeignKey('exercises.id'), primary_key=True
+    )
