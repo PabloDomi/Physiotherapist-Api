@@ -13,10 +13,10 @@ routine_model = api.model("Routine", {
     "id": fields.Integer,
     "name": fields.String,
     "description": fields.String,
-    "exercises": fields.List(fields.Nested(exercise_model)),
     "estimatedTime": fields.Integer,
     "user_id": fields.Integer,
-    "patient_id": fields.Integer
+    "patient_id": fields.Integer,
+    "exercises": fields.List(fields.Nested(exercise_model))
 })
 
 patient_model = api.model("Patient", {
@@ -25,11 +25,7 @@ patient_model = api.model("Patient", {
     "surname": fields.String,
     "age": fields.Integer,
     "gender": fields.String,
-    "routine_id": fields.Integer,
-    # De esta manera te devuelve un array de objetos
-    "routines": fields.List(fields.Nested(routine_model))
-    # De esta manera te devuelve un objeto
-    # "routines": fields.Nested(routine_model)
+    "routine_id": fields.Integer
 })
 
 user_model = api.model("User", {
