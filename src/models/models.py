@@ -7,8 +7,6 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
-    surname = db.Column(db.String(80), nullable=False)
-    username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_token = db.Column(db.String(250), nullable=False)
 
@@ -35,7 +33,6 @@ class Routines(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
 
-    # Este sí se muestra
     exercises = db.relationship(
         'Exercises', secondary='routine_exercise', back_populates='routine'
         )
@@ -49,7 +46,6 @@ class Exercises(db.Model):
     description = db.Column(db.String(250), nullable=False)
     routine_ids = db.Column(db.ARRAY(db.Integer))
 
-    # Este no se muestra
     routine = db.relationship(
         'Routines', secondary='routine_exercise', back_populates='exercises'
         )
@@ -58,8 +54,6 @@ class Exercises(db.Model):
 class RoutineExercise(db.Model):
     __tablename__ = 'routine_exercise'
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-
-    id = db.Column(db.Integer, primary_key=True)
     routine_id = db.Column(
         db.Integer, db.ForeignKey('routines.id'), primary_key=True
     )
