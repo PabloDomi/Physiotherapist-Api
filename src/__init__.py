@@ -5,6 +5,7 @@ from .extensions import api, db, jwt, migration
 from flask_cors import CORS
 from src.models.models import User
 from src.routes.routes import ns
+from src.routes.loginRoutes import login_ns
 
 
 def create_app():
@@ -15,12 +16,24 @@ def create_app():
 
     app.config.from_object(Config)
 
+    # Instance of db
     db.init_app(app)
+
+    # Enable CORS
     CORS(app)
+
+    # Initialize the app with the api
     api.init_app(app)
+
+    # Initialize the app with the jwt
     jwt.init_app(app)
+
+    # Initialize the app with the migration
     migration.init_app(app, db)
+
+    # Add the namespaces to the app
     api.add_namespace(ns)
+    api.add_namespace(login_ns)
 
     return app
 

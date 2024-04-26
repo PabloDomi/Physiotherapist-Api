@@ -45,3 +45,20 @@ user_model = api.model("User", {
     "email": fields.String,
     "password_token": fields.String
 })
+
+user_register_model = api.model("UserRegister", {
+    "name": fields.String,
+    "email": fields.String,
+    "password_token": fields.String
+})
+
+login_model = api.model("LoginModel", {
+    "email": fields.String,
+    "password": fields.String
+})
+
+logged_model = api.model("LoggedModel", {
+    "name": fields.String,
+    "email": fields.String,
+    "access_token": fields.String
+})

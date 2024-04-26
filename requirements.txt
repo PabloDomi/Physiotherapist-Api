@@ -8,3 +8,4 @@ flask-Migrate
 flask-cors
 mysqlclient
 psycopg2-binary
+Werkzeug

@@ -4,3 +4,5 @@ init_setup.py
 template.py
 venv
 __pycache__
+env
+.env

@@ -9,6 +9,7 @@ class User(db.Model):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_token = db.Column(db.String(250), nullable=False)
+    access_token = db.Column(db.String(350), nullable=True)
 
 
 class Patient(db.Model):
