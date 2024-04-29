@@ -10,6 +10,13 @@ routine_forexercise_model = api.model("RoutineForExercise", {
     "patient_id": fields.Integer
 })
 
+exercise_forroutine_model = api.model("ExerciseForRoutine", {
+    "id": fields.Integer,
+    "name": fields.String,
+    "description": fields.String,
+    "routine_ids": fields.List(fields.Integer)
+})
+
 
 exercise_model = api.model("Exercise", {
     "id": fields.Integer,
@@ -27,7 +34,7 @@ routine_model = api.model("Routine", {
     "estimatedTime": fields.Integer,
     "user_id": fields.Integer,
     "patient_id": fields.Integer,
-    "exercises": fields.List(fields.Nested(exercise_model))
+    "exercises": fields.List(fields.Nested(exercise_forroutine_model))
 })
 
 patient_model = api.model("Patient", {
