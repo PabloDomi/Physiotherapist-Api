@@ -7,16 +7,7 @@ from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.extensions import db
 
-
-authorizations = {
-    "jsonWebToken": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "Authorization"
-    }
-}
-
-login_ns = Namespace('api/Sign', authorizations=authorizations)
+login_ns = Namespace('api/Sign')
 
 
 @login_ns.route('/Register')

@@ -6,6 +6,8 @@ from flask_cors import CORS
 from src.models.models import User
 from src.routes.routes import ns
 from src.routes.loginRoutes import login_ns
+from src.routes.userManagementRoutes import user_management_ns
+from src.routes.patientManagementRoutes import patient_management_ns
 
 
 def create_app():
@@ -34,6 +36,8 @@ def create_app():
     # Add the namespaces to the app
     api.add_namespace(ns)
     api.add_namespace(login_ns)
+    api.add_namespace(user_management_ns)
+    api.add_namespace(patient_management_ns)
 
     return app
 

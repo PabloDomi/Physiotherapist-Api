@@ -58,7 +58,25 @@ login_model = api.model("LoginModel", {
 })
 
 logged_model = api.model("LoggedModel", {
+    "id": fields.Integer,
     "name": fields.String,
     "email": fields.String,
     "access_token": fields.String
+})
+
+success_model = api.model("ChangePasswordModel", {
+    "success": fields.Boolean,
+})
+
+changePassword_input_model = api.model("ChangePasswordModel", {
+    "email": fields.String,
+    "newPassword": fields.String
+})
+
+patient_input_model = api.model("PatientInputModel", {
+    "name": fields.String,
+    "surname": fields.String,
+    "age": fields.Integer,
+    "gender": fields.String,
+    "routine_id": fields.Integer
 })

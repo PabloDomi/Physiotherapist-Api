@@ -4,8 +4,15 @@ from src.models.api_models import (
 from src.models.models import Exercises, Routines, Patient, User
 from flask_restx import Resource, Namespace
 
+authorizations = {
+    "jsonWebToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+    }
+}
 
-ns = Namespace('api')
+ns = Namespace('api', authorizations=authorizations)
 
 
 @ns.route('/routines')
