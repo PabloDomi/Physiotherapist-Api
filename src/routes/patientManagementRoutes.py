@@ -24,22 +24,23 @@ class RegisterPatient(Resource):
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
 
-        if patient_management_ns.payload["routine_id"] == 'Ninguna':
-            patient = Patient(
-                name=patient_management_ns.payload["name"],
-                surname=patient_management_ns.payload["surname"],
-                age=patient_management_ns.payload["age"],
-                gender=patient_management_ns.payload["gender"]
-            )
-        else:
-            patient = Patient(
-                name=patient_management_ns.payload["name"],
-                surname=patient_management_ns.payload["surname"],
-                age=patient_management_ns.payload["age"],
-                gender=patient_management_ns.payload["gender"],
-                routine_id=patient_management_ns.payload["routine_id"]
-            )
+        patient = Patient(
+            name=patient_management_ns.payload["name"],
+            surname=patient_management_ns.payload["surname"],
+            age=patient_management_ns.payload["age"],
+            gender=patient_management_ns.payload["gender"]
+        )
 
         db.session.add(patient)
         db.session.commit()
         return {'success': True}, 201
+
+
+@patient_management_ns.route('/patientDelete/<int:id>')
+class PatientDelete(Resource):
+    @patient_management_ns.marshal_list_with(success_model)
+    def delete(self, id):
+        patient = Patient.query.get(id)
+        db.session.delete(patient)
+        db.session.commit()
+        return {'success': True}, 200

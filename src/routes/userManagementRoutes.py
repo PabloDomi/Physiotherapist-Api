@@ -34,3 +34,25 @@ class ChangePassword(Resource):
             )
             db.session.commit()
             return {'success': True}, 201
+
+
+@user_management_ns.route('/checkEmail/<string:email>')
+class CheckEmail(Resource):
+    @user_management_ns.marshal_list_with(success_model)
+    def get(self, email):
+        user = User.query.filter_by(email=email).one_or_none()
+        if user:
+            return {'success': True}, 200
+        return {'success': False}, 404
+
+
+@user_management_ns.route('/deleteUser/<string:email>')
+class DeleteUser(Resource):
+    @user_management_ns.marshal_list_with(success_model)
+    def delete(self, email):
+        user = User.query.filter_by(email=email).one_or_none()
+        if user:
+            db.session.delete(user)
+            db.session.commit()
+            return {'success': True}, 200
+        return {'success': False}, 404
