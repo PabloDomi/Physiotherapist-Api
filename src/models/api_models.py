@@ -95,3 +95,11 @@ addRoutine_input_model = api.model("AddRoutineInputModel", {
     "user_id": fields.Integer,
     "patient_id": fields.Integer
 })
+
+addExerciseToRoutine_input_model = api.model(
+    "AddExerciseToRoutineInputModel", {
+        "name": fields.String,
+        "description": fields.String,
+        "routine_name": fields.String
+    }
+)
