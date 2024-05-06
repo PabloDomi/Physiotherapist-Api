@@ -15,7 +15,6 @@ class RegisterUser(Resource):
     @login_ns.expect(user_register_model)
     @login_ns.marshal_with(user_register_model)
     def post(self):
-        print(login_ns.payload)
 
         user = User(
             name=login_ns.payload['name'],

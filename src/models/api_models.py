@@ -87,3 +87,11 @@ patient_input_model = api.model("PatientInputModel", {
     "gender": fields.String,
     "routine_id": fields.Integer
 })
+
+addRoutine_input_model = api.model("AddRoutineInputModel", {
+    "name": fields.String,
+    "description": fields.String,
+    "estimatedTime": fields.Integer,
+    "user_id": fields.Integer,
+    "patient_id": fields.Integer
+})
