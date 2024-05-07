@@ -1,5 +1,6 @@
 from src.models.api_models import (
-    success_model, addRoutine_input_model, addExerciseToRoutine_input_model
+    success_model, addRoutine_input_model, addExerciseToRoutine_input_model,
+    exercises_from_routine_model
 )
 from src.models.models import Routines, Exercises
 from src.extensions import db
@@ -45,13 +46,17 @@ class addExerciseToRoutine(Resource):
     @routine_management_ns.expect(addExerciseToRoutine_input_model)
     @routine_management_ns.marshal_with(success_model)
     def post(self):
+
+        print(routine_management_ns.payload['routine_name'])
+
         routine = Routines.query.filter_by(
             name=routine_management_ns.payload['routine_name']
         ).first()
 
         exercise = Exercises(
             name=routine_management_ns.payload['name'],
-            description=routine_management_ns.payload['description']
+            description=routine_management_ns.payload['description'],
+            routine_ids=[]
         )
 
         exercise.routine_ids.append(routine.id)
@@ -60,4 +65,14 @@ class addExerciseToRoutine(Resource):
         db.session.commit()
         if routine and exercise:
             return {'success': True}, 201
+        return {'success': False}, 404
+
+
+@routine_management_ns.route('/getExercisesFromRoutine/<string:routine_name>')
+class getExercisesFromRoutine(Resource):
+    @routine_management_ns.marshal_list_with(exercises_from_routine_model)
+    def get(self, routine_name):
+        routine = Routines.query.filter_by(name=routine_name).first()
+        if routine:
+            return routine.exercises, 200
         return {'success': False}, 404

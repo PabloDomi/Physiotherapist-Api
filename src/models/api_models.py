@@ -103,3 +103,8 @@ addExerciseToRoutine_input_model = api.model(
         "routine_name": fields.String
     }
 )
+
+exercises_from_routine_model = api.model("ExercisesFromRoutineModel", {
+    "name": fields.String,
+    "description": fields.String
+})
