@@ -1,6 +1,7 @@
 from src.models.api_models import (
     success_model, addRoutine_input_model, addExerciseToRoutine_input_model,
-    exercises_from_routine_model, hasRoutine_model
+    exercises_from_routine_model, hasRoutine_model, updateRoutine_input_model,
+    updateRoutine_model
 )
 from src.models.models import Routines, Exercises
 from src.extensions import db
@@ -99,3 +100,42 @@ class checkHasRoutine(Resource):
             return {'hasRoutine': True}, 200
         elif not routine:
             return {'hasRoutine': False}, 200
+
+
+@routine_management_ns.route('/updateRoutine')
+class updateRoutine(Resource):
+    @routine_management_ns.expect(updateRoutine_input_model)
+    @routine_management_ns.marshal_with(updateRoutine_model)
+    def put(self):
+        routine = Routines.query.filter_by(id=routine_management_ns.payload[
+            'routine_id'
+        ]).first()
+        if routine:
+            if (routine.name != routine_management_ns.payload['name']):
+                routine.name = routine_management_ns.payload['name']
+
+            if (routine.description != routine_management_ns.payload[
+                'description'
+            ]):
+                routine.description = routine_management_ns.payload[
+                    'description'
+                ]
+
+            if (routine.estimatedTime != routine_management_ns.payload[
+                'estimatedTime'
+            ]):
+                routine.estimatedTime = routine_management_ns.payload[
+                    'estimatedTime'
+                ]
+
+            if (routine.user_id != routine_management_ns.payload[
+                'patient_id'
+            ]):
+                routine.patient_id = routine_management_ns.payload[
+                    'patient_id'
+                ]
+
+            db.session.commit()
+            return {'Success': True, 'data': routine}, 200
+
+        return {'Success': False}, 404
