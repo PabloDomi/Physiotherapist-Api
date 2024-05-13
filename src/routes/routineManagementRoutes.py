@@ -1,6 +1,6 @@
 from src.models.api_models import (
     success_model, addRoutine_input_model, addExerciseToRoutine_input_model,
-    exercises_from_routine_model
+    exercises_from_routine_model, hasRoutine_model
 )
 from src.models.models import Routines, Exercises
 from src.extensions import db
@@ -76,3 +76,26 @@ class getExercisesFromRoutine(Resource):
         if routine:
             return routine.exercises, 200
         return {'success': False}, 404
+
+
+@routine_management_ns.route('/deleteRoutine/<string:routine_id>')
+class deleteRoutine(Resource):
+    @routine_management_ns.marshal_with(success_model)
+    def delete(self, routine_id):
+        routine = Routines.query.filter_by(id=routine_id).first()
+        if routine:
+            db.session.delete(routine)
+            db.session.commit()
+            return {'success': True}, 200
+        return {'success': False}, 404
+
+
+@routine_management_ns.route('/checkHasRoutine/<string:patiend_id>')
+class checkHasRoutine(Resource):
+    @routine_management_ns.marshal_with(hasRoutine_model)
+    def get(self, patiend_id):
+        routine = Routines.query.filter_by(patient_id=patiend_id).first()
+        if routine:
+            return {'hasRoutine': True}, 200
+        elif not routine:
+            return {'hasRoutine': False}, 200

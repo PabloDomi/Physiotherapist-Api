@@ -75,6 +75,10 @@ success_model = api.model("ChangePasswordModel", {
     "success": fields.Boolean,
 })
 
+hasRoutine_model = api.model("HasRoutineModel", {
+    "hasRoutine": fields.Boolean
+})
+
 changePassword_input_model = api.model("ChangePasswordModel", {
     "email": fields.String,
     "newPassword": fields.String
