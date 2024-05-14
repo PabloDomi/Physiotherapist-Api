@@ -107,9 +107,20 @@ updateRoutine_input_model = api.model("UpdateRoutineInputModel", {
     "patient_id": fields.Integer
 })
 
+updateExercise_input_model = api.model("UpdateExerciseInputModel", {
+    "name": fields.String,
+    "description": fields.String,
+    "routine_id": fields.Nested(fields.Integer)
+})
+
 updateRoutine_model = api.model("UpdateRoutineModel", {
     "Success": fields.Boolean,
     "data": fields.Nested(routine_model)
+})
+
+updateExercise_model = api.model("UpdateExerciseModel", {
+    "Success": fields.Boolean,
+    "data": fields.Nested(exercise_model)
 })
 
 addExerciseToRoutine_input_model = api.model(
