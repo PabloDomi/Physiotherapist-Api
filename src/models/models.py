@@ -1,5 +1,6 @@
 from src.extensions import db
 from sqlalchemy import event
+from sqlalchemy import inspect
 
 
 class User(db.Model):
@@ -54,7 +55,10 @@ class Exercises(db.Model):
 
 class RoutineExercise(db.Model):
     __tablename__ = 'routine_exercise'
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
+    id = db.Column(
+        db.Integer,
+        primary_key=True, nullable=False,
+    )
     routine_id = db.Column(
         db.Integer, db.ForeignKey('routines.id'), primary_key=True
     )
@@ -66,6 +70,10 @@ class RoutineExercise(db.Model):
 @event.listens_for(Exercises, 'after_insert')
 @event.listens_for(Exercises, 'after_update')
 def update_routine_exercise(mapper, connection, target):
+    # Inspecciona los nombres de columnas del modelo RoutineExercise
+    inspector = inspect(RoutineExercise)
+    print([column.name for column in inspector.columns])
+
     # Verifica si routine_ids está presente en el objeto Exercises
     if hasattr(target, 'routine_ids') and target.routine_ids:
         # Obtiene los IDs de las rutinas ya asociadas a este ejercicio
@@ -74,9 +82,11 @@ def update_routine_exercise(mapper, connection, target):
                 RoutineExercise.exercise_id == target.id
             )
         ).fetchall()
+
+        print(existing_routine_ids)
         # Crea un conjunto de IDs para facilitar la búsqueda
         existing_routine_ids = {
-            row['routine_id'] for row in existing_routine_ids
+            row[1] for row in existing_routine_ids
         }
         # Itera sobre los IDs en routine_ids
         for routine_id in target.routine_ids:

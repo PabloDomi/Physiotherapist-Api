@@ -1,7 +1,7 @@
 from src.models.api_models import (
     success_model, addRoutine_input_model, addExerciseToRoutine_input_model,
     exercises_from_routine_model, hasRoutine_model, updateRoutine_input_model,
-    updateRoutine_model, routine_forexercise_model, exercise_forroutine_model,
+    updateRoutine_model, routine_forexercise_model, exercise_model,
     updateExercise_input_model, updateExercise_model
 )
 from src.models.models import Routines, Exercises
@@ -154,7 +154,7 @@ class getRoutineById(Resource):
 
 @routine_management_ns.route('/getExerciseById/<string:exercise_id>')
 class getExerciseById(Resource):
-    @routine_management_ns.marshal_with(exercise_forroutine_model)
+    @routine_management_ns.marshal_with(exercise_model)
     def get(self, exercise_id):
         exercise = Exercises.query.filter_by(id=exercise_id).first()
         if exercise:
@@ -180,7 +180,7 @@ class updateExercise(Resource):
     @routine_management_ns.marshal_with(updateExercise_model)
     def put(self):
         exercise = Exercises.query.filter_by(id=routine_management_ns.payload[
-            'routine_id'
+            'id'
         ]).first()
         if exercise:
             if (exercise.name != routine_management_ns.payload['name']):
