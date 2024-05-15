@@ -110,7 +110,11 @@ updateRoutine_input_model = api.model("UpdateRoutineInputModel", {
 updateExercise_input_model = api.model("UpdateExerciseInputModel", {
     "name": fields.String,
     "description": fields.String,
-    "routine_id": fields.Nested(fields.Integer)
+    "routine_id": fields.List(fields.Integer)
+})
+
+Integer_model = api.model("IntegerModel", {
+    "id": fields.Integer
 })
 
 updateRoutine_model = api.model("UpdateRoutineModel", {
