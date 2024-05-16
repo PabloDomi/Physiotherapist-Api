@@ -5,6 +5,7 @@ from src.models.models import User
 from src.extensions import db
 from werkzeug.security import generate_password_hash
 from flask_restx import Resource, Namespace
+from flask_jwt_extended import jwt_required
 
 authorizations = {
     "jsonWebToken": {
@@ -21,6 +22,10 @@ user_management_ns = Namespace(
 
 @user_management_ns.route('/changePassword')
 class ChangePassword(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @user_management_ns.doc(security='jsonWebToken')
     @user_management_ns.expect(changePassword_input_model)
     @user_management_ns.marshal_list_with(success_model)
     def put(self):
@@ -38,6 +43,10 @@ class ChangePassword(Resource):
 
 @user_management_ns.route('/checkEmail/<string:email>')
 class CheckEmail(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @user_management_ns.doc(security='jsonWebToken')
     @user_management_ns.marshal_list_with(success_model)
     def get(self, email):
         user = User.query.filter_by(email=email).one_or_none()
@@ -48,6 +57,10 @@ class CheckEmail(Resource):
 
 @user_management_ns.route('/deleteUser/<string:email>')
 class DeleteUser(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @user_management_ns.doc(security='jsonWebToken')
     @user_management_ns.marshal_list_with(success_model)
     def delete(self, email):
         user = User.query.filter_by(email=email).one_or_none()

@@ -4,9 +4,10 @@ from src.models.api_models import (
     updateRoutine_model, routine_forexercise_model, exercise_model,
     updateExercise_input_model, updateExercise_model
 )
-from src.models.models import Routines, Exercises
+from src.models.models import Routines, Exercises, Patient
 from src.extensions import db
 from flask_restx import Resource, Namespace
+from flask_jwt_extended import jwt_required
 
 authorizations = {
     "jsonWebToken": {
@@ -23,6 +24,10 @@ routine_management_ns = Namespace(
 
 @routine_management_ns.route('/addRoutine')
 class AddRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.expect(addRoutine_input_model)
     @routine_management_ns.marshal_with(success_model)
     def post(self):
@@ -38,13 +43,30 @@ class AddRoutine(Resource):
         db.session.add(routine)
         db.session.commit()
 
-        if routine:
+        patient = Patient.query.filter_by(
+            id=routine_management_ns.payload['patient_id']
+        ).first()
+
+        routineCreated = Routines.query.filter_by(
+            name=routine_management_ns.payload['name']
+        ).first()
+
+        if patient:
+            patient.routine_id = routineCreated.id
+
+        db.session.commit()
+
+        if routine and patient:
             return {'success': True}, 201
         return {'success': False}, 404
 
 
 @routine_management_ns.route('/addExerciseToRoutine')
 class addExerciseToRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.expect(addExerciseToRoutine_input_model)
     @routine_management_ns.marshal_with(success_model)
     def post(self):
@@ -72,6 +94,10 @@ class addExerciseToRoutine(Resource):
 
 @routine_management_ns.route('/getExercisesFromRoutine/<string:routine_name>')
 class getExercisesFromRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_list_with(exercises_from_routine_model)
     def get(self, routine_name):
         routine = Routines.query.filter_by(name=routine_name).first()
@@ -82,6 +108,10 @@ class getExercisesFromRoutine(Resource):
 
 @routine_management_ns.route('/deleteRoutine/<string:routine_id>')
 class deleteRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(success_model)
     def delete(self, routine_id):
         routine = Routines.query.filter_by(id=routine_id).first()
@@ -92,11 +122,15 @@ class deleteRoutine(Resource):
         return {'success': False}, 404
 
 
-@routine_management_ns.route('/checkHasRoutine/<string:patiend_id>')
+@routine_management_ns.route('/checkHasRoutine/<int:patient_id>')
 class checkHasRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(hasRoutine_model)
-    def get(self, patiend_id):
-        routine = Routines.query.filter_by(patient_id=patiend_id).first()
+    def get(self, patient_id):
+        routine = Routines.query.filter_by(patient_id=patient_id).first()
         if routine:
             return {'hasRoutine': True}, 200
         elif not routine:
@@ -105,12 +139,24 @@ class checkHasRoutine(Resource):
 
 @routine_management_ns.route('/updateRoutine')
 class updateRoutine(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.expect(updateRoutine_input_model)
     @routine_management_ns.marshal_with(updateRoutine_model)
     def put(self):
+
+        patient = Patient.query.filter_by(id=routine_management_ns.payload[
+            'patient_id'
+        ]).first()
+
         routine = Routines.query.filter_by(id=routine_management_ns.payload[
             'routine_id'
         ]).first()
+
+        initialPatient = Patient.query.filter_by(id=routine.patient_id).first()
+
         if routine:
             if (routine.name != routine_management_ns.payload['name']):
                 routine.name = routine_management_ns.payload['name']
@@ -129,12 +175,21 @@ class updateRoutine(Resource):
                     'estimatedTime'
                 ]
 
-            if (routine.user_id != routine_management_ns.payload[
+            if (routine.patient_id != routine_management_ns.payload[
                 'patient_id'
             ]):
+                initialPatient.routine_id = None
+
                 routine.patient_id = routine_management_ns.payload[
                     'patient_id'
                 ]
+
+                if patient:
+                    patient.routine_id = routine_management_ns.payload[
+                        'routine_id'
+                    ]
+                else:
+                    return {'Success': False}, 404
 
             db.session.commit()
             return {'Success': True, 'data': routine}, 200
@@ -144,6 +199,10 @@ class updateRoutine(Resource):
 
 @routine_management_ns.route('/getRoutineById/<string:routine_id>')
 class getRoutineById(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(routine_forexercise_model)
     def get(self, routine_id):
         routine = Routines.query.filter_by(id=routine_id).first()
@@ -154,6 +213,10 @@ class getRoutineById(Resource):
 
 @routine_management_ns.route('/getExerciseById/<string:exercise_id>')
 class getExerciseById(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(exercise_model)
     def get(self, exercise_id):
         exercise = Exercises.query.filter_by(id=exercise_id).first()
@@ -164,6 +227,10 @@ class getExerciseById(Resource):
 
 @routine_management_ns.route('/deleteExercise/<string:exercise_id>')
 class deleteExercise(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(success_model)
     def delete(self, exercise_id):
         exercise = Exercises.query.filter_by(id=exercise_id).first()
@@ -176,6 +243,10 @@ class deleteExercise(Resource):
 
 @routine_management_ns.route('/updateExercise')
 class updateExercise(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.expect(updateExercise_input_model)
     @routine_management_ns.marshal_with(updateExercise_model)
     def put(self):

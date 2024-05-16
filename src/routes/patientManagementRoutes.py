@@ -4,6 +4,7 @@ from src.models.api_models import (
 from src.models.models import Patient
 from src.extensions import db
 from flask_restx import Resource, Namespace
+from flask_jwt_extended import jwt_required
 
 authorizations = {
     "jsonWebToken": {
@@ -20,6 +21,10 @@ patient_management_ns = Namespace(
 
 @patient_management_ns.route('/registerPatient')
 class RegisterPatient(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
     @patient_management_ns.expect(patient_input_model)
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
@@ -38,6 +43,10 @@ class RegisterPatient(Resource):
 
 @patient_management_ns.route('/patientDelete/<int:id>')
 class PatientDelete(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
     @patient_management_ns.marshal_list_with(success_model)
     def delete(self, id):
         patient = Patient.query.get(id)
