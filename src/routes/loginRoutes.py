@@ -46,3 +46,23 @@ class LoginUser(Resource):
         user.access_token = create_access_token(user)
         db.session.commit()
         return user, 201
+
+
+@login_ns.route('/Logout')
+class LogoutUser(Resource):
+    @login_ns.marshal_with(logged_model)
+    def post(self):
+        user = User.query.filter_by(email=login_ns.payload['email']).first()
+        user.access_token = None
+        db.session.commit()
+        return user, 201
+
+
+@login_ns.route('/RefreshJWToken')
+class RefreshJWToken(Resource):
+    @login_ns.marshal_with(logged_model)
+    def post(self):
+        user = User.query.filter_by(email=login_ns.payload['email']).first()
+        user.access_token = create_access_token(user)
+        db.session.commit()
+        return user, 201
