@@ -63,6 +63,7 @@ class LogoutUser(Resource):
         return user, 201
 
 
+"""
 @login_ns.route('/RefreshJWToken')
 class RefreshJWToken(Resource):
     method_decorators = [jwt_required()]
@@ -73,4 +74,16 @@ class RefreshJWToken(Resource):
         user = User.query.filter_by(email=login_ns.payload['email']).first()
         user.access_token = create_access_token(user)
         db.session.commit()
+        return user, 201
+"""
+
+
+@login_ns.route('/getAccessToken/<string:email>')
+class GetAccessToken(Resource):
+    method_decorators = [jwt_required()]
+
+    @login_ns.doc(security='jsonWebToken')
+    @login_ns.marshal_with(logged_model)
+    def get(self, email):
+        user = User.query.filter_by(email=email).first()
         return user, 201
