@@ -140,3 +140,7 @@ exercises_from_routine_model = api.model("ExercisesFromRoutineModel", {
     "name": fields.String,
     "description": fields.String
 })
+
+logout_model = api.model("LogoutModel", {
+    "email": fields.String
+})

@@ -1,5 +1,6 @@
 from src.models.api_models import (
-    user_register_model, login_model, logged_model
+    user_register_model, login_model, logged_model,
+    logout_model
 )
 from src.models.models import User
 from flask_restx import Resource, Namespace
@@ -53,6 +54,7 @@ class LogoutUser(Resource):
     method_decorators = [jwt_required()]
 
     @login_ns.doc(security='jsonWebToken')
+    @login_ns.expect(logout_model)
     @login_ns.marshal_with(logged_model)
     def post(self):
         user = User.query.filter_by(email=login_ns.payload['email']).first()
