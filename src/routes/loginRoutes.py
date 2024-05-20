@@ -3,7 +3,7 @@ from src.models.api_models import (
 )
 from src.models.models import User
 from flask_restx import Resource, Namespace
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.extensions import db
 
@@ -50,6 +50,9 @@ class LoginUser(Resource):
 
 @login_ns.route('/Logout')
 class LogoutUser(Resource):
+    method_decorators = [jwt_required()]
+
+    @login_ns.doc(security='jsonWebToken')
     @login_ns.marshal_with(logged_model)
     def post(self):
         user = User.query.filter_by(email=login_ns.payload['email']).first()
@@ -60,6 +63,9 @@ class LogoutUser(Resource):
 
 @login_ns.route('/RefreshJWToken')
 class RefreshJWToken(Resource):
+    method_decorators = [jwt_required()]
+
+    @login_ns.doc(security='jsonWebToken')
     @login_ns.marshal_with(logged_model)
     def post(self):
         user = User.query.filter_by(email=login_ns.payload['email']).first()
