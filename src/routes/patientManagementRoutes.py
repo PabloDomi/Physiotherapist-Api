@@ -1,7 +1,7 @@
 from src.models.api_models import (
     patient_input_model, success_model
 )
-from src.models.models import Patient
+from src.models.models import Patient, Routines, updateOnDeleteRoutinePatientId
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
@@ -49,7 +49,18 @@ class PatientDelete(Resource):
     @patient_management_ns.doc(security='jsonWebToken')
     @patient_management_ns.marshal_list_with(success_model)
     def delete(self, id):
+        # Iniciar una transacción manualmente
         patient = Patient.query.get(id)
+        if not patient:
+            return {'message': 'Patient not found'}, 404
+
+        # Obtener y eliminar las rutinas del paciente
+        routine = Routines.query.filter_by(patient_id=id).first()
+
+        updateOnDeleteRoutinePatientId(routine)
+
         db.session.delete(patient)
+
+        # Confirmar la transacción si todo va bien
         db.session.commit()
         return {'success': True}, 200

@@ -100,3 +100,9 @@ def update_routine_exercise(mapper, connection, target):
                 # Agrega el ID a la lista de IDs asociados
                 # para evitar duplicados
                 existing_routine_ids.add(routine_id)
+
+
+def updateOnDeleteRoutinePatientId(routine):
+    routine.patient_id = None
+    db.session.commit()
+    return {'success': True}, 200
