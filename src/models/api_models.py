@@ -144,3 +144,11 @@ exercises_from_routine_model = api.model("ExercisesFromRoutineModel", {
 logout_model = api.model("LogoutModel", {
     "email": fields.String
 })
+
+passwordRecovery_model = api.model("PasswordRecoveryModel", {
+    "email": fields.String
+})
+
+error_with_name_model = api.model("ErrorWithNameModel", {
+    "msg": fields.String
+})

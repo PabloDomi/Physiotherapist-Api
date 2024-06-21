@@ -3,6 +3,7 @@ from flask import Flask
 from src.config.config import Config
 from .extensions import api, db, jwt, migration
 from flask_cors import CORS
+from .extensions import mail
 from src.models.models import User
 from src.routes.routes import ns
 from src.routes.loginRoutes import login_ns
@@ -30,6 +31,17 @@ def create_app():
 
     # Initialize the app with the jwt
     jwt.init_app(app)
+
+    # Mail config
+    app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USERNAME'] = '279b71af8a29bf'
+    app.config['MAIL_PASSWORD'] = 'debc80aa621625'
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+
+    # Initialize the app with the mail
+    mail.init_app(app)
 
     # Initialize the app with the migration
     migration.init_app(app, db)

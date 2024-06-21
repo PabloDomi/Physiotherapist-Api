@@ -1,12 +1,14 @@
 from src.models.api_models import (
     user_register_model, login_model, logged_model,
-    logout_model
+    logout_model, passwordRecovery_model, success_model
 )
 from src.models.models import User
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import create_access_token, jwt_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from src.extensions import db
+from flask_mail import Message
+from src.extensions import mail
 
 login_ns = Namespace('api/Sign')
 
@@ -87,3 +89,31 @@ class GetAccessToken(Resource):
     def get(self, email):
         user = User.query.filter_by(email=email).first()
         return user, 201
+
+
+@login_ns.route('/passwordRecovery')
+class PasswordRecovery(Resource):
+
+    @login_ns.expect(passwordRecovery_model)
+    @login_ns.marshal_list_with(success_model)
+    def post(self):
+        user = User.query.filter_by(
+                email=login_ns.payload["email"]
+            ).one_or_none()
+        if user:
+            msg = Message('Password Recovery',
+                          sender='platform-support@example.com',
+                          recipients=[user.email])
+            url = 'http://localhost:5173/activateAccount/true'
+            body = f'''
+            Hola usuario, este es el token de validación que va a necesitar en
+             el cambio de contraseña: {user.password_token}\n\n
+            Por favor, acceda al siguiente link de cambio
+             de contraseña para completar el proceso:\n\n{url}\n
+            '''
+            msg.body = body
+            mail.send(msg)
+
+            return {'success': True}
+        else:
+            return {'success': False}

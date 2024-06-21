@@ -10,3 +10,4 @@ mysqlclient
 psycopg2-binary
 Werkzeug
 gunicorn
+flask-mail
