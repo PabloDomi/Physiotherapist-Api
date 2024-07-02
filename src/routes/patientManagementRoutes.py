@@ -1,5 +1,5 @@
 from src.models.api_models import (
-    patient_input_model, success_model
+    patient_input_model, success_model, landmarks_model, health_info_model
 )
 from src.models.models import Patient, Routines, updateOnDeleteRoutinePatientId
 from src.extensions import db
@@ -64,3 +64,35 @@ class PatientDelete(Resource):
         # Confirmar la transacción si todo va bien
         db.session.commit()
         return {'success': True}, 200
+
+
+@patient_management_ns.route('/patientLandmarks')
+class patientLandmarks(Resource):
+
+    # method_decorators = [jwt_required()]
+
+    # @patient_management_ns.doc(security='jsonWebToken')
+
+    # Eventualmente se usará la lógica de jwtoken para seguridad
+
+    @patient_management_ns.expect(landmarks_model)
+    @patient_management_ns.marshal_list_with(success_model)
+    def post(self):
+        print(patient_management_ns.payload)
+        return 200
+
+
+@patient_management_ns.route('/patientHealthInfo')
+class patientHealthInfo(Resource):
+
+    # method_decorators = [jwt_required()]
+
+    # @patient_management_ns.doc(security='jsonWebToken')
+
+    # Eventualmente se usará la lógica de jwtoken para seguridad
+
+    @patient_management_ns.expect(health_info_model)
+    @patient_management_ns.marshal_list_with(success_model)
+    def post(self):
+        print(patient_management_ns.payload)
+        return 200

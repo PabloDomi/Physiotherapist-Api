@@ -152,3 +152,15 @@ passwordRecovery_model = api.model("PasswordRecoveryModel", {
 error_with_name_model = api.model("ErrorWithNameModel", {
     "msg": fields.String
 })
+
+landmarks_model = api.model("LandmarksModel", {
+    "landmarks": fields.List(fields.String),
+    "date": fields.String
+})
+
+health_info_model = api.model("HealthInfoModel", {
+    "steps": fields.Integer,
+    "flights": fields.Integer,
+    "distance": fields.Float,
+    "date": fields.String
+})
