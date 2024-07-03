@@ -141,6 +141,12 @@ exercises_from_routine_model = api.model("ExercisesFromRoutineModel", {
     "description": fields.String
 })
 
+exercises_from_tablet_model = api.model("ExercisesFromTabletModel", {
+    "id": fields.Integer,
+    "name": fields.String,
+    "description": fields.String
+})
+
 logout_model = api.model("LogoutModel", {
     "email": fields.String
 })
@@ -163,4 +169,18 @@ health_info_model = api.model("HealthInfoModel", {
     "flights": fields.Integer,
     "distance": fields.Float,
     "date": fields.String
+})
+
+tablet_check_model = api.model("TabletCheckModel", {
+    "patient_id": fields.Integer,
+    "treatment_time": fields.Integer,
+    "routine_id": fields.Integer,
+    "treatment_cadence": fields.Integer
+})
+
+tablet_routine_model = api.model("TabletRoutineModel", {
+    "name": fields.String,
+    "description": fields.String,
+    "estimatedTime": fields.Integer,
+    "exercises": fields.List(fields.Nested(exercises_from_routine_model))
 })

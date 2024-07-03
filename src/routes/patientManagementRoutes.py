@@ -1,7 +1,10 @@
 from src.models.api_models import (
-    patient_input_model, success_model, landmarks_model, health_info_model
+    patient_input_model, success_model, landmarks_model, health_info_model,
+    tablet_check_model, tablet_routine_model
 )
-from src.models.models import Patient, Routines, updateOnDeleteRoutinePatientId
+from src.models.models import (
+    Patient, Routines, updateOnDeleteRoutinePatientId, TabletPatient
+)
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
@@ -96,3 +99,42 @@ class patientHealthInfo(Resource):
     def post(self):
         print(patient_management_ns.payload)
         return 200
+
+
+@patient_management_ns.route('/checkTabletLogin/<int:tablet_id>')
+class checkTabletLogin(Resource):
+
+    # method_decorators = [jwt_required()]
+
+    # @patient_management_ns.doc(security='jsonWebToken')
+
+    # Eventualmente se usará la lógica de jwtoken para seguridad
+
+    @patient_management_ns.marshal_list_with(tablet_check_model)
+    def get(self, tablet_id):
+        tablet = TabletPatient.query.filter_by(tablet_id=tablet_id).first()
+        if not tablet:
+            return {'message': 'Tablet not found'}, 404
+        routine = Routines.query.filter_by(
+            patient_id=tablet.patient_id
+        ).first()
+        return {
+            'patient_id': tablet.patient_id,
+            'treatment_time': tablet.treatment_time,
+            'routine_id': routine.id,
+            'tratment_cadence': tablet.treatment_cadence
+            }, 200
+
+
+@patient_management_ns.route('/getRoutineById/<string:routine_id>')
+class getRoutineById(Resource):
+
+    # method_decorators = [jwt_required()]
+
+    # @patient_management_ns.doc(security='jsonWebToken')
+    @patient_management_ns.marshal_with(tablet_routine_model)
+    def get(self, routine_id):
+        routine = Routines.query.filter_by(id=routine_id).first()
+        if routine:
+            return routine, 200
+        return {'Success': False}, 404
