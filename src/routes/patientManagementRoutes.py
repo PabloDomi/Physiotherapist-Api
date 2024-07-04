@@ -1,6 +1,6 @@
 from src.models.api_models import (
     patient_input_model, success_model, landmarks_model, health_info_model,
-    tablet_check_model, tablet_routine_model
+    tablet_check_model, tablet_routine_model, tablet_model, tablet_input_model
 )
 from src.models.models import (
     Patient, Routines, updateOnDeleteRoutinePatientId, TabletPatient
@@ -112,7 +112,7 @@ class checkTabletLogin(Resource):
 
     @patient_management_ns.marshal_list_with(tablet_check_model)
     def get(self, tablet_id):
-        tablet = TabletPatient.query.filter_by(tablet_id=tablet_id).first()
+        tablet = TabletPatient.query.filter_by(id=tablet_id).first()
         if not tablet:
             return {'message': 'Tablet not found'}, 404
         routine = Routines.query.filter_by(
@@ -138,3 +138,74 @@ class getRoutineById(Resource):
         if routine:
             return routine, 200
         return {'Success': False}, 404
+
+
+@patient_management_ns.route('/getTablets')
+class getTablets(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
+    @patient_management_ns.marshal_list_with(tablet_model)
+    def get(self):
+        return TabletPatient.query.all()
+
+
+@patient_management_ns.route('/createTablet')
+class createTablet(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
+    @patient_management_ns.expect(tablet_input_model)
+    @patient_management_ns.marshal_list_with(success_model)
+    def post(self):
+        tablet = TabletPatient(
+            patient_id=patient_management_ns.payload["patient_id"],
+            treatment_time=patient_management_ns.payload["treatment_time"],
+            treatment_cadence=patient_management_ns.payload[
+                "treatment_cadence"
+                ]
+        )
+        db.session.add(tablet)
+        db.session.commit()
+        return {'success': True}, 201
+
+
+@patient_management_ns.route('/deleteTablet/<int:id>')
+class deleteTablet(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
+    @patient_management_ns.marshal_list_with(success_model)
+    def delete(self, id):
+        tablet = TabletPatient.query.get(id)
+        if not tablet:
+            return {'message': 'Tablet not found'}, 404
+        db.session.delete(tablet)
+        db.session.commit()
+        return {'success': True}, 200
+
+
+@patient_management_ns.route('/updateTablet')
+class updateTablet(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @patient_management_ns.doc(security='jsonWebToken')
+    @patient_management_ns.expect(tablet_model)
+    @patient_management_ns.marshal_list_with(success_model)
+    def put(self):
+        tablet = TabletPatient.query.get(
+            patient_management_ns.payload["id"]
+        )
+        if not tablet:
+            return {'message': 'Tablet not found'}, 404
+        tablet.patient_id = patient_management_ns.payload["patient_id"]
+        tablet.treatment_time = patient_management_ns.payload["treatment_time"]
+        tablet.treatment_cadence = patient_management_ns.payload[
+            "treatment_cadence"
+        ]
+        db.session.commit()
+        return {'success': True}, 200

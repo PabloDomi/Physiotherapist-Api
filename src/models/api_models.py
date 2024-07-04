@@ -184,3 +184,16 @@ tablet_routine_model = api.model("TabletRoutineModel", {
     "estimatedTime": fields.Integer,
     "exercises": fields.List(fields.Nested(exercises_from_routine_model))
 })
+
+tablet_model = api.model("TabletModel", {
+    "id": fields.Integer,
+    "patient_id": fields.Integer,
+    "treatment_time": fields.Integer,
+    "treatment_cadence": fields.Integer
+})
+
+tablet_input_model = api.model("TabletInputModel", {
+    "patient_id": fields.Integer,
+    "treatment_time": fields.Integer,
+    "treatment_cadence": fields.Integer
+})

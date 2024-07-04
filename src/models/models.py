@@ -71,7 +71,6 @@ class TabletPatient(db.Model):
     __tablename__ = 'tablet_patients'
 
     id = db.Column(db.Integer, primary_key=True)
-    tablet_id = db.Column(db.Integer, nullable=False)
     patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
     treatment_time = db.Column(db.Integer, nullable=False)
     treatment_cadence = db.Column(db.Integer, nullable=False)
