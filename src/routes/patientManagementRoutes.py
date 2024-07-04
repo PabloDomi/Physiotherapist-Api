@@ -122,7 +122,7 @@ class checkTabletLogin(Resource):
             'patient_id': tablet.patient_id,
             'treatment_time': tablet.treatment_time,
             'routine_id': routine.id,
-            'tratment_cadence': tablet.treatment_cadence
+            'treatment_cadence': tablet.treatment_cadence
             }, 200
 
 
