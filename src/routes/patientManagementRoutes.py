@@ -9,7 +9,6 @@ from src.models.models import (
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
-from pandas import DataFrame
 import os
 
 authorizations = {
@@ -85,14 +84,22 @@ class patientLandmarks(Resource):
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
         print(patient_management_ns.payload)
-        df = DataFrame(patient_management_ns.payload['landmarks'])
+        landmarks = patient_management_ns.payload['landmarks']
+
+        # Formatear los landmarks en el formato requerido
+        formatted_landmarks = "[\n"
+        for lm in landmarks:
+            formatted_landmarks += f"['{lm}'],\n"
+        formatted_landmarks = formatted_landmarks.rstrip(',\n') + "\n]"
+
         # Directorio de salida en el contenedor temporal
         output_dir = '/tmp'
         output_file = 'landmarks.csv'
 
         # Guardar el DataFrame en un archivo CSV en el directorio especificado
         output_path = os.path.join(output_dir, output_file)
-        df.to_csv(output_path, index=False)
+        with open(output_path, 'w') as f:
+            f.write(formatted_landmarks)
 
         print(f'Archivo guardado en {output_path}')
 
