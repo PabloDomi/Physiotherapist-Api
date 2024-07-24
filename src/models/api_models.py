@@ -160,8 +160,9 @@ error_with_name_model = api.model("ErrorWithNameModel", {
 })
 
 landmarks_model = api.model("LandmarksModel", {
-    "landmarks": fields.List(fields.String),
-    "date": fields.String
+    "date": fields.String,
+    "fps": fields.Integer,
+    "landmarks": fields.List(fields.String)
 })
 
 health_info_model = api.model("HealthInfoModel", {

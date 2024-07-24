@@ -65,7 +65,6 @@ class LogoutUser(Resource):
         return user, 201
 
 
-"""
 @login_ns.route('/RefreshJWToken')
 class RefreshJWToken(Resource):
     method_decorators = [jwt_required()]
@@ -77,7 +76,6 @@ class RefreshJWToken(Resource):
         user.access_token = create_access_token(user)
         db.session.commit()
         return user, 201
-"""
 
 
 @login_ns.route('/getAccessToken/<string:email>')
