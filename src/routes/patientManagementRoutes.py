@@ -94,10 +94,16 @@ class patientLandmarks(Resource):
         output_path = os.path.join(output_dir, output_file)
         df.to_csv(output_path, index=False)
 
-        send_from_directory(output_dir, output_file, as_attachment=True)
-
         print(f'Archivo guardado en {output_path}')
+
+        print('Archivo CSV generado...')
         return 200
+
+@patient_management_ns.route('/download')
+class Download(Resource):
+    def get(self):
+        return send_from_directory(output_dir, output_file, as_attachment=True)
+
 
 
 @patient_management_ns.route('/patientHealthInfo')
