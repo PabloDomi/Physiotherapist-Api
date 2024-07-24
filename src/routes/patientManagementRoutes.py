@@ -99,11 +99,14 @@ class patientLandmarks(Resource):
         print('Archivo CSV generado...')
         return 200
 
+
 @patient_management_ns.route('/download')
 class Download(Resource):
     def get(self):
-        return send_from_directory(output_dir, output_file, as_attachment=True)
+        output_dir = '/tmp'
+        output_file = 'landmarks.csv'
 
+        return send_from_directory(output_dir, output_file, as_attachment=True)
 
 
 @patient_management_ns.route('/patientHealthInfo')
