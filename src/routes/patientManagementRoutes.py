@@ -2,12 +2,15 @@ from src.models.api_models import (
     patient_input_model, success_model, landmarks_model, health_info_model,
     tablet_check_model, tablet_routine_model, tablet_model, tablet_input_model
 )
+from flask import send_from_directory
 from src.models.models import (
     Patient, Routines, updateOnDeleteRoutinePatientId, TabletPatient
 )
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
+from pandas import DataFrame
+import os
 
 authorizations = {
     "jsonWebToken": {
@@ -82,6 +85,18 @@ class patientLandmarks(Resource):
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
         print(patient_management_ns.payload)
+        df = DataFrame(patient_management_ns.payload['landmarks'])
+        # Directorio de salida en el contenedor temporal
+        output_dir = '/tmp'
+        output_file = 'landmarks.csv'
+
+        # Guardar el DataFrame en un archivo CSV en el directorio especificado
+        output_path = os.path.join(output_dir, output_file)
+        df.to_csv(output_path, index=False)
+
+        send_from_directory(output_dir, output_file, as_attachment=True)
+
+        print(f'Archivo guardado en {output_path}')
         return 200
 
 
