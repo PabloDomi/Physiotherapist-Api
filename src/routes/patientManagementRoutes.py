@@ -105,10 +105,19 @@ class patientLandmarks(Resource):
         if current_list:
             formatted_landmarks.append(current_list)
 
+        # Convertir la lista de listas a una cadena formateada
+        formatted_landmarks_str = "[\n"
+        for frame in formatted_landmarks:
+            formatted_landmarks_str += "[\n"
+            for lm in frame:
+                formatted_landmarks_str += f"  '{lm}',\n"
+            formatted_landmarks_str += "],\n"
+        formatted_landmarks_str = formatted_landmarks_str.rstrip(',\n') + "\n]"
+
         # Guardar el archivo en el sistema de archivos temporal
         output_path = '/tmp/landmarks.txt'
         with open(output_path, 'w') as f:
-            f.write(formatted_landmarks)
+            f.write(formatted_landmarks_str)
 
         return 200
 
