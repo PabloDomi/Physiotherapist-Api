@@ -97,11 +97,12 @@ class patientLandmarks(Resource):
         # Formatear los landmarks en el formato requerido
         for lm in landmarks:
             current_list.append(lm)
-            if len(current_list) == 32:
+            if len(current_list) == 33:
                 formatted_landmarks.append(current_list)
                 current_list = []
 
-        # Añadir cualquier resto de landmarks si la longitud no es múltiplo de 32
+        # Añadir cualquier resto de landmarks si la
+        # longitud no es múltiplo de 33
         if current_list:
             formatted_landmarks.append(current_list)
 
