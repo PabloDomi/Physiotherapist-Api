@@ -2,14 +2,17 @@ from src.models.api_models import (
     patient_input_model, success_model, landmarks_model, health_info_model,
     tablet_check_model, tablet_routine_model, tablet_model, tablet_input_model
 )
-from flask import send_from_directory
 from src.models.models import (
     Patient, Routines, updateOnDeleteRoutinePatientId, TabletPatient
 )
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
+from src.controllers.landmarks_controller import (
+    calculate_exercise, analyze_exercise_data
+)
 import os
+from flask import send_file
 
 authorizations = {
     "jsonWebToken": {
@@ -83,37 +86,70 @@ class patientLandmarks(Resource):
     @patient_management_ns.expect(landmarks_model)
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
-        print(patient_management_ns.payload)
         landmarks = patient_management_ns.payload['landmarks']
 
+        # Inicializar la lista de listas formateada
+        formatted_landmarks = []
+
+        # Variable temporal para almacenar cada sublista de 32 landmarks
+        current_list = []
+
         # Formatear los landmarks en el formato requerido
-        formatted_landmarks = "[\n"
         for lm in landmarks:
-            formatted_landmarks += f"['{lm}'],\n"
-        formatted_landmarks = formatted_landmarks.rstrip(',\n') + "\n]"
+            current_list.append(lm)
+            if len(current_list) == 32:
+                formatted_landmarks.append(current_list)
+                current_list = []
 
-        # Directorio de salida en el contenedor temporal
-        output_dir = '/tmp'
-        output_file = 'landmarks.csv'
+        # Añadir cualquier resto de landmarks si la longitud no es múltiplo de 32
+        if current_list:
+            formatted_landmarks.append(current_list)
 
-        # Guardar el DataFrame en un archivo CSV en el directorio especificado
-        output_path = os.path.join(output_dir, output_file)
+        # Guardar el archivo en el sistema de archivos temporal
+        output_path = '/tmp/landmarks.txt'
         with open(output_path, 'w') as f:
             f.write(formatted_landmarks)
 
-        print(f'Archivo guardado en {output_path}')
-
-        print('Archivo CSV generado...')
         return 200
 
 
-@patient_management_ns.route('/download')
-class Download(Resource):
-    def get(self):
-        output_dir = '/tmp'
-        output_file = 'landmarks.csv'
+@patient_management_ns.route('/downloadLandmarks')
+class DownloadLandmarks(Resource):
 
-        return send_from_directory(output_dir, output_file, as_attachment=True)
+    def get(self):
+        # Ruta del archivo guardado
+        output_path = '/tmp/landmarks.txt'
+
+        # Comprobar si el archivo existe
+        if not os.path.exists(output_path):
+            return {'message': 'File not found'}, 404
+
+        # Enviar el archivo
+        return send_file(
+            output_path,
+            as_attachment=True,
+            download_name='landmarks.txt',
+            mimetype='text/plain'
+        )
+
+
+@patient_management_ns.route('/calculateExercise')
+class CalculateExercise(Resource):
+    def get(self):
+
+        """
+            Falta recoger los datos del paciente, a través del número de tablet
+            que deberá pasar la aplicación móvil, con eso coger el patient_id
+            y junto con el resultado de analyze_exercise_data, guardar los
+            datos en BBDD.
+
+            Cabría pensar si vale la pena crear otra FK en la tabla de
+            patient_stats que sea exercise_id, y tener un
+            seguimiento de a que ejercicio se refieren esas estadísticas.
+        """
+
+        data = calculate_exercise()
+        return analyze_exercise_data(data), 200
 
 
 @patient_management_ns.route('/patientHealthInfo')

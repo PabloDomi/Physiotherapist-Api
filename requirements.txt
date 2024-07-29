@@ -12,3 +12,6 @@ Werkzeug
 gunicorn
 flask-mail
 pandas
+numpy
+matplotlib
+scipy

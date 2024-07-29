@@ -76,6 +76,17 @@ class TabletPatient(db.Model):
     treatment_cadence = db.Column(db.Integer, nullable=False)
 
 
+class PatientStats(db.Model):
+    __tablename__ = 'patient_stats'
+
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patients.id'))
+    total_time = db.Column(db.Integer, nullable=False)
+    average_series_time = db.Column(db.Integer, nullable=False)
+    average_time_between_reps = db.Column(db.Integer, nullable=False)
+    reps_per_series = db.Column(db.ARRAY(db.Integer))
+
+
 @event.listens_for(Exercises, 'after_insert')
 @event.listens_for(Exercises, 'after_update')
 def update_routine_exercise(mapper, connection, target):
