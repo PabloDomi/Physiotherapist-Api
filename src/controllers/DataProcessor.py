@@ -13,19 +13,19 @@ import ast
 
 class DataProcessor:
     def __init__(self, data, output_path):
-        # self.data_path = data_path
+        self.data = data
         self.output_path = output_path
         self.pattern = r"x=(-?\d+\.\d+), y=(-?\d+\.\d+), z=(-?\d+\.\d+), visibility=(\d+\.\d+)"
         self.data_list = self.read_data()
         self.landmarks_df = self.create_dataframe()
 
-    def read_data(self, data):
+    def read_data(self):
         """
         Lee el archivo y convierte el contenido a una estructura de datos de Python (lista de listas).
         """
         # with open(self.data_path, 'r') as file:
         #     data = file.read()
-        return ast.literal_eval(data)
+        return ast.literal_eval(self.data)
 
     def extract_values(self, data_string):
         """
@@ -85,12 +85,12 @@ class DataProcessor:
 # In[3]:
 
 
-# datapath = r"C:\Users\ARMCO\Documents\PROYECTOS\Anaphys\data\landmarks_prueba_2.txt"
-output_path = r"/tmp/landmarks.csv"
+# # datapath = r"C:\Users\ARMCO\Documents\PROYECTOS\Anaphys\data\landmarks_prueba_2.txt"
+# output_path = r"/tmp/landmarks.csv"
 
-# Uso de la clase
-processor = DataProcessor(data, output_path=output_path)
-landmarks_df = processor.landmarks_df
-processor.save_to_csv()
-# Mostrar el DataFrame
-landmarks_df
+# # Uso de la clase
+# processor = DataProcessor(data, output_path=output_path)
+# landmarks_df = processor.landmarks_df
+# processor.save_to_csv()
+# # Mostrar el DataFrame
+# landmarks_df

@@ -10,6 +10,7 @@ from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
 import os
 from flask import send_file
+from src.controllers.landmarks_controller import ProcessLandmarks
 
 authorizations = {
     "jsonWebToken": {
@@ -103,34 +104,37 @@ class patientLandmarks(Resource):
         if current_list:
             formatted_landmarks.append(current_list)
 
-        """
-        En este punto, formatted_landmarks es una lista de listas, asi que lo
-        mandamos ya al -->
+        # En este punto, formatted_landmarks es una lista de listas, asi que lo
+        # mandamos ya al -->
 
         response = ProcessLandmarks(
-            patient_id, exercise_id, formatted_landmarks, date, fps
+            patient_management_ns.payload['patient_id'],
+            patient_management_ns.payload['exercise_id'],
+            formatted_landmarks,
+            patient_management_ns.payload['date'],
+            patient_management_ns.payload['fps']
         )
 
-        Hay que importar el método de landmarks_controller.py
-        Lo de debajo de este comentario se borra y el downloadLandmarks también
-        """
+        # Hay que importar el método de landmarks_controller.py
+        # Lo de debajo de este comentario se borra y el downloadLandmarks
+        # también
 
-        # Convertir la lista de listas a una cadena formateada
-        formatted_landmarks_str = "[\n"
-        for frame in formatted_landmarks:
-            formatted_landmarks_str += "[\n"
-            for lm in frame:
-                formatted_landmarks_str += f"  '{lm}',\n"
-            formatted_landmarks_str += "],\n"
-        formatted_landmarks_str = formatted_landmarks_str.rstrip(',\n') + "\n]"
+        # # Convertir la lista de listas a una cadena formateada
+        # formatted_landmarks_str = "[\n"
+        # for frame in formatted_landmarks:
+        #     formatted_landmarks_str += "[\n"
+        #     for lm in frame:
+        #         formatted_landmarks_str += f"  '{lm}',\n"
+        #     formatted_landmarks_str += "],\n"
+        # formatted_landmarks_str = formatted_landmarks_str.rstrip(',\n') + "\n]"
 
-        # Guardar el archivo en el sistema de archivos temporal
-        output_path = '/tmp/landmarks.txt'
-        with open(output_path, 'w') as f:
-            f.write(formatted_landmarks_str)
+        # # Guardar el archivo en el sistema de archivos temporal
+        # output_path = '/tmp/landmarks.txt'
+        # with open(output_path, 'w') as f:
+        #     f.write(formatted_landmarks_str)
 
-        return 201
-        # return response
+        # return 201
+        return response
 
 
 @patient_management_ns.route('/downloadLandmarks')
