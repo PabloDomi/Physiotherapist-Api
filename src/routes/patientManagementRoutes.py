@@ -200,7 +200,7 @@ class checkTabletLogin(Resource):
             }, 200
 
 
-@patient_management_ns.route('/getRoutineById/<string:routine_id>')
+@patient_management_ns.route('/getRoutineByIdWithoutToken/<string:routine_id>')
 class getRoutineById(Resource):
 
     # method_decorators = [jwt_required()]

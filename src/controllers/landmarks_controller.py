@@ -80,7 +80,6 @@ def ProcessLandmarks(
 
     data = calculate_exercise()
     exercise = Exercises.query.filter_by(name=exercise_name).first()
-    print(exercise)
 
     exercise_id = exercise.id
     # data =  calculate_exercise(landmarks_formatted, exercise_name, fps)
