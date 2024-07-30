@@ -1,6 +1,6 @@
 from src.controllers.ExerciseAnalyzer import ExerciseAnalyzer
 from src.controllers.DataProcessor import DataProcessor
-from src.models import PatientStats, Exercises
+from src.models.models import PatientStats, Exercises
 from src.extensions import db
 
 
