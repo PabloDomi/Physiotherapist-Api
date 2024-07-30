@@ -85,6 +85,7 @@ class PatientStats(db.Model):
     average_series_time = db.Column(db.Integer, nullable=False)
     average_time_between_reps = db.Column(db.Integer, nullable=False)
     reps_per_series = db.Column(db.ARRAY(db.Integer))
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
 
 
 @event.listens_for(Exercises, 'after_insert')

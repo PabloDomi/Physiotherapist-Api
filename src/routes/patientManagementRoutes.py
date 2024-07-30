@@ -8,9 +8,6 @@ from src.models.models import (
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
-from src.controllers.landmarks_controller import (
-    calculate_exercise, analyze_exercise_data
-)
 import os
 from flask import send_file
 
@@ -106,6 +103,18 @@ class patientLandmarks(Resource):
         if current_list:
             formatted_landmarks.append(current_list)
 
+        """
+        En este punto, formatted_landmarks es una lista de listas, asi que lo
+        mandamos ya al -->
+
+        response = ProcessLandmarks(
+            patient_id, exercise_id, formatted_landmarks, date, fps
+        )
+
+        Hay que importar el método de landmarks_controller.py
+        Lo de debajo de este comentario se borra y el downloadLandmarks también
+        """
+
         # Convertir la lista de listas a una cadena formateada
         formatted_landmarks_str = "[\n"
         for frame in formatted_landmarks:
@@ -120,7 +129,8 @@ class patientLandmarks(Resource):
         with open(output_path, 'w') as f:
             f.write(formatted_landmarks_str)
 
-        return 200
+        return 201
+        # return response
 
 
 @patient_management_ns.route('/downloadLandmarks')
@@ -141,25 +151,6 @@ class DownloadLandmarks(Resource):
             download_name='landmarks.txt',
             mimetype='text/plain'
         )
-
-
-@patient_management_ns.route('/calculateExercise')
-class CalculateExercise(Resource):
-    def get(self):
-
-        """
-            Falta recoger los datos del paciente, a través del número de tablet
-            que deberá pasar la aplicación móvil, con eso coger el patient_id
-            y junto con el resultado de analyze_exercise_data, guardar los
-            datos en BBDD.
-
-            Cabría pensar si vale la pena crear otra FK en la tabla de
-            patient_stats que sea exercise_id, y tener un
-            seguimiento de a que ejercicio se refieren esas estadísticas.
-        """
-
-        data = calculate_exercise()
-        return analyze_exercise_data(data), 200
 
 
 @patient_management_ns.route('/patientHealthInfo')
