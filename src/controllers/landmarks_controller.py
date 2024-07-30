@@ -40,7 +40,7 @@ def analyze_exercise_data(data):
             "total_time": total_time,
             "average_series_time": 0,
             "average_time_between_reps": 0,
-            "reps_per_series": 0
+            "reps_per_series": reps_per_series
         }
 
     average_series_time = total_time / len(series_times)
