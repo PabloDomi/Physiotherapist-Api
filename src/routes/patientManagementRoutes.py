@@ -131,7 +131,7 @@ class patientLandmarks(Resource):
         response = ProcessLandmarks(
             self,
             patient_management_ns.payload['patient_id'],
-            patient_management_ns.payload['exercise_id'],
+            patient_management_ns.payload['exercise_name'],
             formatted_landmarks_str,
             patient_management_ns.payload['date'],
             patient_management_ns.payload['fps']
