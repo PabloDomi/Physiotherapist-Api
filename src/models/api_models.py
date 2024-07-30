@@ -161,7 +161,7 @@ error_with_name_model = api.model("ErrorWithNameModel", {
 
 landmarks_model = api.model("LandmarksModel", {
     "patient_id": fields.Integer,
-    "exercise_id": fields.Integer,
+    "exercise_name": fields.Integer,
     "landmarks": fields.List(fields.String),
     "date": fields.String,
     "fps": fields.Integer

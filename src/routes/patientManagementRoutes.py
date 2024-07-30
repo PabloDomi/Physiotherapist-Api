@@ -85,7 +85,7 @@ class patientLandmarks(Resource):
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
         print(patient_management_ns.payload['patient_id'])
-        print(patient_management_ns.payload['exercise_id'])
+        print(patient_management_ns.payload['exercise_name'])
         print(patient_management_ns.payload['date'])
         print(patient_management_ns.payload['fps'])
 
