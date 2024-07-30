@@ -35,6 +35,14 @@ def analyze_exercise_data(data):
                 for i in range(1, len(reps)):
                     time_between_reps.append(reps[i] - reps[i-1])
 
+    if len(series_times) == 0:
+        return {
+            "total_time": total_time,
+            "average_series_time": 0,
+            "average_time_between_reps": 0,
+            "reps_per_series": 0
+        }
+
     average_series_time = total_time / len(series_times)
     average_time_between_reps = sum(time_between_reps) / len(
         time_between_reps
