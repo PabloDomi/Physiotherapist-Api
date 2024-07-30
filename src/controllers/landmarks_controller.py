@@ -79,7 +79,10 @@ def ProcessLandmarks(
     processor.save_to_csv()
 
     data = calculate_exercise()
-    exercise_id = Exercises.query.filter_by(name=exercise_name).first().id
+    exercise = Exercises.query.filter_by(name=exercise_name).first()
+    print(exercise)
+
+    exercise_id = exercise.id
     # data =  calculate_exercise(landmarks_formatted, exercise_name, fps)
     landmarks_data = analyze_exercise_data(data)
 
