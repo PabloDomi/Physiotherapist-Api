@@ -84,6 +84,7 @@ class patientLandmarks(Resource):
     @patient_management_ns.expect(landmarks_model)
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
+        print(patient_management_ns.payload)
         landmarks = patient_management_ns.payload['landmarks']
 
         # Inicializar la lista de listas formateada
@@ -108,6 +109,7 @@ class patientLandmarks(Resource):
         # mandamos ya al -->
 
         response = ProcessLandmarks(
+            self,
             patient_management_ns.payload['patient_id'],
             patient_management_ns.payload['exercise_id'],
             formatted_landmarks,
