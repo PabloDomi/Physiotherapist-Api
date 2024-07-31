@@ -4,7 +4,7 @@
 # In[3]:
 
 
-# BIBLIOTECAS   
+# BIBLIOTECAS
 import pandas as pd
 import numpy as np
 
@@ -143,36 +143,36 @@ class ExerciseAnalyzerv2:
         velocity_x = np.zeros(len(self.df))
         velocity_y = np.zeros(len(self.df))
         velocity_z = np.zeros(len(self.df))
-        
+
         for landmark in self.df["landmark"].unique():
             positions_x = self.df.loc[self.df["landmark"] == landmark, "x"].values
             positions_y = self.df.loc[self.df["landmark"] == landmark, "y"].values
             positions_z = self.df.loc[self.df["landmark"] == landmark, "z"].values
-            
+
             dx = np.diff(positions_x)
             dy = np.diff(positions_y)
             dz = np.diff(positions_z)
-            
+
             dt = 1 / self.fps
-            
+
             vx = dx / dt
             vy = dy / dt
             vz = dz / dt
-            
+
             vx = np.insert(vx, 0, 0)
             vy = np.insert(vy, 0, 0)
             vz = np.insert(vz, 0, 0)
-            
+
             velocity_x[self.df["landmark"] == landmark] = vx
             velocity_y[self.df["landmark"] == landmark] = vy
             velocity_z[self.df["landmark"] == landmark] = vz
-        
+
         self.df["vx"] = velocity_x
         self.df["vy"] = velocity_y
         self.df["vz"] = velocity_z
-        
+
         return self.df
-    
+
     # CALCULO DE VELOCIDAD SUAVIZADA
     def calculate_smooth_velocity(self):
         """
@@ -181,19 +181,19 @@ class ExerciseAnalyzerv2:
         velocity_x_smooth = np.zeros(len(self.df))
         velocity_y_smooth = np.zeros(len(self.df))
         velocity_z_smooth = np.zeros(len(self.df))
-        
+
         # Iterar sobre cada landmark para aplicar el suavizado
         for landmark in self.df["landmark"].unique():
             # Extraer velocidades para el landmark actual
             vx = self.df.loc[self.df["landmark"] == landmark, "vx"].values
             vy = self.df.loc[self.df["landmark"] == landmark, "vy"].values
             vz = self.df.loc[self.df["landmark"] == landmark, "vz"].values
-            
+
             # Aplicar filtro de suavizado Savitzky-Golay
             vx_smooth = savgol_filter(vx, window_length=self.window_length, polyorder=self.polyorder)
             vy_smooth = savgol_filter(vy, window_length=self.window_length, polyorder=self.polyorder)
             vz_smooth = savgol_filter(vz, window_length=self.window_length, polyorder=self.polyorder)
-            
+
             # Insertar las velocidades suavizadas en las posiciones correspondientes en el array temporal
             velocity_x_smooth[self.df["landmark"] == landmark] = vx_smooth
             velocity_y_smooth[self.df["landmark"] == landmark] = vy_smooth
@@ -402,7 +402,7 @@ class ExerciseAnalyzerv2:
         for i, interval in enumerate(self.total_intervals):
             start, end = interval
             counter = sum(1 for peak in self.total_peaks if start <= peak <= end)
-            result[i] = {tuple(interval): counter}
+            result[i] = {str(tuple(interval)): counter}
         
         return result
     
@@ -420,10 +420,10 @@ class ExerciseAnalyzerv2:
             # # Asegurar que peaks es una lista
             # if not isinstance(peaks, list):
             #     peaks = [peaks]
-                
+
             time_peaks = [round(peak / self.fps, 3) for peak in peaks]
-            result[i + 1] = {tuple(time_interval): time_peaks}
-        
+            result[i + 1] = {str(tuple(time_interval)): time_peaks}
+
         return result
 
     def create_graph(self, lndmrk=None):
