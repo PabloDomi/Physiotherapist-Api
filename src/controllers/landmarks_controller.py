@@ -1,12 +1,12 @@
-from src.controllers.ExerciseAnalyzer import ExerciseAnalyzer
-from src.controllers.DataProcessor import DataProcessor
+from src.controllers.ExerciseAnalyzerv2 import ExerciseAnalyzerv2
+from src.controllers.DataProcessorv2 import DataProcessorv2
 from src.models.models import PatientStats, Exercises
 from src.extensions import db
 
 
 def calculate_exercise():
     data_path = '/tmp/landmarks.csv'
-    datos = ExerciseAnalyzer(data_path, "squat")
+    datos = ExerciseAnalyzerv2(data_path, "squat")
 
     formatted_data = datos.analyze_exercise()
     return formatted_data
@@ -74,7 +74,7 @@ def ProcessLandmarks(
     output_path = r"/tmp/landmarks.csv"
 
     # Uso de la clase
-    processor = DataProcessor(landmarks_formatted, output_path=output_path)
+    processor = DataProcessorv2(landmarks_formatted, output_path=output_path)
     # landmarks_df = processor.landmarks_df
     processor.save_to_csv()
 
