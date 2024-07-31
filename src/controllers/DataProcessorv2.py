@@ -14,7 +14,7 @@ class DataProcessorv2:
         self.data = data
         self.output_path = output_path
         self.pattern = r"x=(-?\d+\.\d+(?:E[-+]?\d+)?), y=(-?\d+\.\d+(?:E[-+]?\d+)?), z=(-?\d+\.\d+(?:E[-+]?\d+)?), visibility=(\d+\.\d+(?:E[-+]?\d+)?)"
-        self.data_list = self.read_data()
+        self.data_list = self.read_data(data)
         self.landmarks_df = self.create_dataframe()
         self.save_to_csv()
 
