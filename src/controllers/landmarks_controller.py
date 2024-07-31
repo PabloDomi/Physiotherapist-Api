@@ -60,17 +60,6 @@ def ProcessLandmarks(
     self, patient_id, exercise_name, landmarks_formatted, date, fps
 ):
 
-    """
-        Falta recoger los datos del paciente, a través del número de tablet
-        que deberá pasar la aplicación móvil, con eso coger el patient_id
-        y junto con el resultado de analyze_exercise_data, guardar los
-        datos en BBDD.
-
-        Cabría pensar si vale la pena crear otra FK en la tabla de
-        patient_stats que sea exercise_id, y tener un
-        seguimiento de a que ejercicio se refieren esas estadísticas.
-    """
-
     output_path = r"/tmp/landmarks.csv"
 
     # Uso de la clase

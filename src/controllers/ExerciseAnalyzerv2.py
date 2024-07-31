@@ -477,7 +477,11 @@ class ExerciseAnalyzerv2:
         fig.suptitle(f'Visualización de velocidad suavizada con intervalos coloreados y repeticiones detectadas (landmark {lndmrk})')
 
         # Mostrar la gráfica
-        plt.show()
+        # plt.show()
+
+        # Guardar la gráfica como un archivo
+        plt.savefig(r"/tmp/graph.png")
+        plt.close(fig)
 
 
 # In[5]:
