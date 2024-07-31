@@ -402,7 +402,7 @@ class ExerciseAnalyzerv2:
         for i, interval in enumerate(self.total_intervals):
             start, end = interval
             counter = sum(1 for peak in self.total_peaks if start <= peak <= end)
-            result[i] = {str(tuple(interval)): counter}
+            result[i] = {tuple(interval): counter}
         
         return result
     
