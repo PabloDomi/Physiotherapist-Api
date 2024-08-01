@@ -144,19 +144,19 @@ class DownloadLandmarks(Resource):
 
     def get(self):
         # Ruta del archivo guardado
-        # output_path = '/tmp/landmarks.txt'
+        output_path = '/tmp/landmarks.csv'
 
-        # # Comprobar si el archivo existe
-        # if not os.path.exists(output_path):
-        #     return {'message': 'File not found'}, 404
+        # Comprobar si el archivo existe
+        if not os.path.exists(output_path):
+            return {'message': 'File not found'}, 404
 
-        # # Enviar el archivo
-        # return send_file(
-        #     output_path,
-        #     as_attachment=True,
-        #     download_name='landmarks.txt',
-        #     mimetype='text/plain'
-        # )
+        # Enviar el archivo
+        return send_file(
+            output_path,
+            as_attachment=True,
+            download_name='landmarks.csv',
+            mimetype='text/plain'
+        )
 
         path = '/tmp/graph.png'
         return send_file(path, as_attachment=True)
