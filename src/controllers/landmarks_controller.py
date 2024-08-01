@@ -6,8 +6,10 @@ from src.extensions import db
 
 def calculate_exercise():
     data_path = '/tmp/landmarks.csv'
+    datos = []
     datos = ExerciseAnalyzerv2(data_path, "squat")
 
+    formatted_data = []
     formatted_data = datos.analyze_exercise()
     datos.create_graph()
     return formatted_data
