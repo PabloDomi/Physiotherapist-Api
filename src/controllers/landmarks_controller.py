@@ -9,6 +9,7 @@ def calculate_exercise():
     datos = ExerciseAnalyzerv2(data_path, "squat")
 
     formatted_data = datos.analyze_exercise()
+    formatted_data.create_graph()
     return formatted_data
 
 
