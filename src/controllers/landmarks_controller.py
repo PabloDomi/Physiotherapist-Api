@@ -63,6 +63,7 @@ def ProcessLandmarks(
     self, patient_id, exercise_name, landmarks_formatted, date, fps
 ):
     data = {}
+    processor = {}
 
     output_path = r"/tmp/landmarks.csv"
 
