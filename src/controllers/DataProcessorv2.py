@@ -24,7 +24,8 @@ class DataProcessorv2:
         """
         # with open(self.data_path, 'r') as file:
         #     data = file.read()
-        return ast.literal_eval(data)
+        data_list = ast.literal_eval(data)
+        return data_list
 
     def extract_values(self, data_string):
         """

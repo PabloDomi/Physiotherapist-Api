@@ -94,7 +94,10 @@ class patientLandmarks(Resource):
         # Inicializar la lista de listas formateada
         formatted_landmarks = []
 
-        # Variable temporal para almacenar cada sublista de 32 landmarks
+        # Contador de sublistas de 33 landmarks
+        count = 0
+
+        # Variable temporal para almacenar cada sublista de 33 landmarks
         current_list = []
 
         # Formatear los landmarks en el formato requerido
@@ -103,16 +106,14 @@ class patientLandmarks(Resource):
             if len(current_list) == 33:
                 formatted_landmarks.append(current_list)
                 current_list = []
+                count += 1
 
         # Añadir cualquier resto de landmarks si la
         # longitud no es múltiplo de 33
         if current_list:
             formatted_landmarks.append(current_list)
 
-        # En este punto, formatted_landmarks es una lista de listas, asi que lo
-        # mandamos ya al -->
-
-        # Hay que importar el método de landmarks_controller.py
+        print(count)
 
         # # Convertir la lista de listas a una cadena formateada
         formatted_landmarks_str = "[\n"
