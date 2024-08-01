@@ -60,6 +60,7 @@ def analyze_exercise_data(data):
 def ProcessLandmarks(
     self, patient_id, exercise_name, landmarks_formatted, date, fps
 ):
+    data = {}
 
     output_path = r"/tmp/landmarks.csv"
 
@@ -69,11 +70,13 @@ def ProcessLandmarks(
     processor.save_to_csv()
 
     data = calculate_exercise()
+    print(f"INFORMACIÓN SALIDA DEL MÓDULO IA: {data}")
     exercise = Exercises.query.filter_by(name=exercise_name).first()
 
     exercise_id = exercise.id
     # data =  calculate_exercise(landmarks_formatted, exercise_name, fps)
     landmarks_data = analyze_exercise_data(data)
+    print(f"INFORMACIÓN SALIDA DEL FORMATEADOR: {landmarks_data}")
 
     patient_stats = PatientStats(
         patient_id=patient_id,
