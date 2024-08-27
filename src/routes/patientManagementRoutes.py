@@ -24,6 +24,19 @@ patient_management_ns = Namespace(
     'api/patient_management', authorizations=authorizations
 )
 
+exercise_translation = {
+    'Sentadilla': 'squat',
+    'Hombro Lateral': 'lateral_shoulder',
+    'Dominada': 'pull_up',
+    'Peso Muerto': 'deadlift',
+    'Curl Martillo': 'hammer_curl',
+    'Jalón al Pecho': 'lat_pulldown',
+    'Press de Hombro': 'shoulder_press',
+    'Fondos de Tríceps': 'tricep_dips',
+    'Empuje de Tríceps': 'tricep_pushdown',
+    'Flexiones': 'push_up'
+}
+
 
 @patient_management_ns.route('/registerPatient')
 class RegisterPatient(Resource):
@@ -84,10 +97,10 @@ class patientLandmarks(Resource):
     @patient_management_ns.expect(landmarks_model)
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
-        print(patient_management_ns.payload['patient_id'])
-        print(patient_management_ns.payload['exercise_name'])
-        print(patient_management_ns.payload['date'])
-        print(patient_management_ns.payload['fps'])
+        # print(patient_management_ns.payload['patient_id'])
+        # print(patient_management_ns.payload['exercise_name'])
+        # print(patient_management_ns.payload['date'])
+        # print(patient_management_ns.payload['fps'])
 
         landmarks = patient_management_ns.payload['landmarks']
 
@@ -129,10 +142,16 @@ class patientLandmarks(Resource):
         # with open(output_path, 'w') as f:
         #     f.write(formatted_landmarks_str)
 
+        exercise_name = patient_management_ns.payload['exercise_name']
+
+        exercise_name_english = exercise_translation.get(
+           exercise_name, exercise_name
+        )
+
         response = ProcessLandmarks(
             self,
             patient_management_ns.payload['patient_id'],
-            patient_management_ns.payload['exercise_name'],
+            exercise_name_english,
             formatted_landmarks_str,
             patient_management_ns.payload['date'],
             patient_management_ns.payload['fps']

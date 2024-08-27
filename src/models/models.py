@@ -57,7 +57,7 @@ class RoutineExercise(db.Model):
     __tablename__ = 'routine_exercise'
     id = db.Column(
         db.Integer,
-        primary_key=True, nullable=False,
+        primary_key=True, autoincrement=True,
     )
     routine_id = db.Column(
         db.Integer, db.ForeignKey('routines.id'), primary_key=True

@@ -4,10 +4,10 @@ from src.models.models import PatientStats, Exercises
 from src.extensions import db
 
 
-def calculate_exercise():
+def calculate_exercise(exercise_name):
     data_path = '/tmp/landmarks.csv'
     datos = []
-    datos = ExerciseAnalyzerv2(data_path, "squat")
+    datos = ExerciseAnalyzerv2(data_path, exercise_name)
 
     formatted_data = []
     formatted_data = datos.analyze_exercise()
@@ -72,7 +72,7 @@ def ProcessLandmarks(
     # landmarks_df = processor.landmarks_df
     processor.save_to_csv()
 
-    data = calculate_exercise()
+    data = calculate_exercise(exercise_name)
     print(f"INFORMACIÓN SALIDA DEL MÓDULO IA: {data}")
     exercise = Exercises.query.filter_by(name=exercise_name).first()
 

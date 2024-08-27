@@ -1,7 +1,7 @@
 from src.models.api_models import (
     success_model, changePassword_input_model, error_with_name_model
 )
-from src.models.models import User
+from src.models.models import User, PatientStats, Exercises
 from src.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_restx import Resource, Namespace
@@ -69,6 +69,64 @@ class DeleteUser(Resource):
             db.session.delete(user)
             db.session.commit()
             return {'success': True}, 200
+        return {'success': False}, 404
+
+
+@user_management_ns.route('/getStats')
+class GetStats(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @user_management_ns.doc(security='jsonWebToken')
+    # @user_management_ns.marshal_list_with(success_model)
+    def get(self):
+        returned_stats = []
+        stats = PatientStats.query.all()
+        if stats:
+            for stat in stats:
+                exercise_name = Exercises.query.filter_by(
+                    id=stat.exercise_id
+                ).first().name
+                returned_stats.append({
+                    "patient_id": stat.patient_id,
+                    "exercise_name": exercise_name,
+                    "total_time": stat.total_time,
+                    "average_series_time": stat.average_series_time,
+                    "average_time_between_reps":
+                        stat.average_time_between_reps,
+                    "reps_per_series": stat.reps_per_series,
+                })
+
+            return returned_stats, 200
+        return {'success': False}, 404
+
+
+@user_management_ns.route('/getPatientStats/<int:patient_id>')
+class GetPatientStats(Resource):
+
+    method_decorators = [jwt_required()]
+
+    @user_management_ns.doc(security='jsonWebToken')
+    # @user_management_ns.marshal_list_with(success_model)
+    def get(self, patient_id):
+        returned_stats = []
+        stats = PatientStats.query.filter_by(patient_id=patient_id).all()
+        if stats:
+            for stat in stats:
+                exercise_name = Exercises.query.filter_by(
+                    id=stat.exercise_id
+                ).first().name
+                returned_stats.append({
+                    "patient_id": stat.patient_id,
+                    "exercise_name": exercise_name,
+                    "total_time": stat.total_time,
+                    "average_series_time": stat.average_series_time,
+                    "average_time_between_reps":
+                        stat.average_time_between_reps,
+                    "reps_per_series": stat.reps_per_series,
+                })
+
+            return returned_stats, 200
         return {'success': False}, 404
 
 
