@@ -4,7 +4,7 @@ from src.models.api_models import (
     updateRoutine_model, routine_forexercise_model, exercise_model,
     updateExercise_input_model, updateExercise_model
 )
-from src.models.models import Routines, Exercises, Patient
+from src.models.models import Routines, Exercises, Patient, PatientStats
 from src.extensions import db
 from flask_restx import Resource, Namespace
 from flask_jwt_extended import jwt_required
@@ -71,8 +71,6 @@ class addExerciseToRoutine(Resource):
     @routine_management_ns.marshal_with(success_model)
     def post(self):
 
-        print(routine_management_ns.payload['routine_name'])
-
         routine = Routines.query.filter_by(
             name=routine_management_ns.payload['routine_name']
         ).first()
@@ -114,8 +112,12 @@ class deleteRoutine(Resource):
     @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(success_model)
     def delete(self, routine_id):
+        patient_routineId = Patient.query.filter_by(
+            routine_id=routine_id
+        ).first()
         routine = Routines.query.filter_by(id=routine_id).first()
-        if routine:
+        if routine and patient_routineId:
+            patient_routineId.routine_id = None
             db.session.delete(routine)
             db.session.commit()
             return {'success': True}, 200
@@ -233,8 +235,16 @@ class deleteExercise(Resource):
     @routine_management_ns.doc(security='jsonWebToken')
     @routine_management_ns.marshal_with(success_model)
     def delete(self, exercise_id):
+        patientStats_exerciseID = PatientStats.query.filter_by(
+            exercise_id=exercise_id
+        ).first()
         exercise = Exercises.query.filter_by(id=exercise_id).first()
-        if exercise:
+        if patientStats_exerciseID and exercise:
+            db.session.delete(patientStats_exerciseID)
+            db.session.delete(exercise)
+            db.session.commit()
+            return {'success': True}, 200
+        elif exercise:
             db.session.delete(exercise)
             db.session.commit()
             return {'success': True}, 200

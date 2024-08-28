@@ -124,6 +124,17 @@ def update_routine_exercise(mapper, connection, target):
 
 
 def updateOnDeleteRoutinePatientId(routine):
-    routine.patient_id = None
-    db.session.commit()
+    if routine:
+        routine.patient_id = None
+        db.session.commit()
+
+        exercises = Exercises.query.filter(
+            Exercises.routine_ids.contains([routine.id])
+        ).all()
+
+        # De las filas sacadas de "exercises" borrar tan solo, en el campo de
+        # routine_ids, el ID de la rutina que se está borrando
+        for exercise in exercises:
+            exercise.routine_ids.remove(routine.id)
+
     return {'success': True}, 200
