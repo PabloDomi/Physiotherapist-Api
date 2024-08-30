@@ -74,7 +74,10 @@ def ProcessLandmarks(
 
     data = calculate_exercise(exercise_name)
     print(f"INFORMACIÓN SALIDA DEL MÓDULO IA: {data}")
+    print(f"Nombre del ejercicio: {exercise_name}")
     exercise = Exercises.query.filter_by(name=exercise_name).first()
+
+    print(exercise)
 
     exercise_id = exercise.id
     # data =  calculate_exercise(landmarks_formatted, exercise_name, fps)
