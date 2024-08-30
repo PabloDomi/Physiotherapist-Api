@@ -3,6 +3,23 @@ from src.controllers.DataProcessorv2 import DataProcessorv2
 from src.models.models import PatientStats, Exercises
 from src.extensions import db
 
+ejercicios_dict = {
+    'squat': 'Sentadilla',
+    'lateral_shoulder': 'Hombro Lateral',
+    'pull_up': 'Dominada',
+    'deadlift': 'Peso Muerto',
+    'hammer_curl': 'Curl Martillo',
+    'lat_pulldown': 'Jalón al Pecho',
+    'shoulder_press': 'Press de Hombro',
+    'tricep_dips': 'Fondos de Tríceps',
+    'tricep_pushdown': 'Empuje de Tríceps',
+    'push_up': 'Flexiones'
+}
+
+
+def translate_exercise(exercise_english):
+    return ejercicios_dict.get(exercise_english, "Ejercicio no encontrado")
+
 
 def calculate_exercise(exercise_name):
     data_path = '/tmp/landmarks.csv'
@@ -75,7 +92,10 @@ def ProcessLandmarks(
     data = calculate_exercise(exercise_name)
     print(f"INFORMACIÓN SALIDA DEL MÓDULO IA: {data}")
     print(f"Nombre del ejercicio: {exercise_name}")
-    exercise = Exercises.query.filter_by(name=exercise_name).first()
+
+    ejercicio_en_espanol = translate_exercise(exercise_name)
+
+    exercise = Exercises.query.filter_by(name=ejercicio_en_espanol).first()
 
     print(exercise)
 
