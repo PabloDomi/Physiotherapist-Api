@@ -86,7 +86,6 @@ def ProcessLandmarks(
 
     # Uso de la clase
     processor = DataProcessorv2(landmarks_formatted, output_path=output_path)
-    # landmarks_df = processor.landmarks_df
     processor.save_to_csv()
 
     data = calculate_exercise(exercise_name)
@@ -100,7 +99,6 @@ def ProcessLandmarks(
     print(exercise)
 
     exercise_id = exercise.id
-    # data =  calculate_exercise(landmarks_formatted, exercise_name, fps)
     landmarks_data = analyze_exercise_data(data)
     print(f"INFORMACIÓN SALIDA DEL FORMATEADOR: {landmarks_data}")
 

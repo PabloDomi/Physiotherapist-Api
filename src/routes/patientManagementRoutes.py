@@ -97,11 +97,6 @@ class patientLandmarks(Resource):
     @patient_management_ns.expect(landmarks_model)
     @patient_management_ns.marshal_list_with(success_model)
     def post(self):
-        # print(patient_management_ns.payload['patient_id'])
-        # print(patient_management_ns.payload['exercise_name'])
-        # print(patient_management_ns.payload['date'])
-        # print(patient_management_ns.payload['fps'])
-
         landmarks = patient_management_ns.payload['landmarks']
 
         # Inicializar la lista de listas formateada
@@ -137,7 +132,7 @@ class patientLandmarks(Resource):
             formatted_landmarks_str += "],\n"
         formatted_landmarks_str = formatted_landmarks_str.rstrip(',\n') + "\n]"
 
-        # # Guardar el archivo en el sistema de archivos temporal
+        # Guardar el archivo en el sistema de archivos temporal
         # output_path = '/tmp/landmarks.txt'
         # with open(output_path, 'w') as f:
         #     f.write(formatted_landmarks_str)
