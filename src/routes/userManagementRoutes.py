@@ -1,7 +1,7 @@
 from src.models.api_models import (
     success_model, changePassword_input_model, error_with_name_model
 )
-from src.models.models import User, PatientStats, Exercises
+from src.models.models import User, PatientStats, Exercises, Patient
 from src.extensions import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_restx import Resource, Namespace
@@ -87,14 +87,25 @@ class GetStats(Resource):
                 exercise_name = Exercises.query.filter_by(
                     id=stat.exercise_id
                 ).first().name
+
+                patient_name_surname = Patient.query.filter_by(
+                    id=stat.patient_id
+                ).first().name + " " + Patient.query.filter_by(
+                    id=stat.patient_id
+                ).first().surname
+
+                # Convertir 'date' a una cadena
+                date_string = stat.date.strftime("%Y-%m-%d %H:%M:%S")
+
                 returned_stats.append({
-                    "patient_id": stat.patient_id,
+                    "patient": patient_name_surname,
                     "exercise_name": exercise_name,
                     "total_time": stat.total_time,
                     "average_series_time": stat.average_series_time,
                     "average_time_between_reps":
                         stat.average_time_between_reps,
                     "reps_per_series": stat.reps_per_series,
+                    "date": date_string
                 })
 
             return returned_stats, 200
